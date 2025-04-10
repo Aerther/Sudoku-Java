@@ -28,7 +28,7 @@ public class Sudoku {
 		this.initializeBoard();
 		this.initializeLockedPositions();
 	}
-
+	
 	public boolean checkWin() {
 		if(!this.isComplete()) return false;
 
@@ -174,5 +174,10 @@ public class Sudoku {
 		}
 
 		board = cloneBoard(indexBoard);		
+	}
+	
+	// Used for test
+	public ArrayList<ArrayList<String>> getBoard() {
+		return this.cloneBoard(0);
 	}
 }

@@ -7,19 +7,21 @@ import java.util.Random;
 import java.util.Set;
 
 public class Sudoku {
-	private ArrayList<ArrayList<String>> originalBoard = new ArrayList<>();
+	private ArrayList<ArrayList<ArrayList<String>>> boards = new ArrayList<>();
 	private ArrayList<ArrayList<Integer>> lockedPositions = new ArrayList<>();
 	private ArrayList<ArrayList<String>> board = new ArrayList<>();
+	private int indexBoard = -1;
 
 	private String selectedNumber = "1";
 
 	public Sudoku() {
+		this.initializeBoards();
 		this.initializeBoard();
 		this.initializeLockedPositions();
 	}
 
 	public void restartBoard() {
-		this.board = cloneBoard();
+		this.board = cloneBoard(indexBoard);
 	}
 
 	public void newGame() {
@@ -41,7 +43,7 @@ public class Sudoku {
 			if(list.size() != set.size()) return false;
 		}
 
-		// Check for the columns
+		// Check for the collumns
 		for (int col = 0; col < board.size(); col++) {
 			check.clear();
 			for (int row = 0; row < board.get(col).size(); row++) {
@@ -123,9 +125,35 @@ public class Sudoku {
 		}
 	}
 
-	private ArrayList<ArrayList<String>> cloneBoard() {
+	private void initializeBoards() {
+		ArrayList<ArrayList<String>> board1 = new ArrayList<>();
+		board1.add(new ArrayList<>(Arrays.asList(" ", " ", " ", "8", " ", "3", " ", "7", "6")));
+		board1.add(new ArrayList<>(Arrays.asList(" ", "7", " ", " ", "9", "2", " ", "1", "4")));
+		board1.add(new ArrayList<>(Arrays.asList(" ", " ", "8", "1", "7", " ", "3", "9", " ")));
+		board1.add(new ArrayList<>(Arrays.asList(" ", " ", "6", " ", "5", " ", " ", "8", "1")));
+		board1.add(new ArrayList<>(Arrays.asList("9", "1", " ", "2", " ", "7", " ", " ", "3")));
+		board1.add(new ArrayList<>(Arrays.asList(" ", " ", "7", "6", " ", " ", " ", " ", " ")));
+		board1.add(new ArrayList<>(Arrays.asList("7", "3", " ", " ", " ", " ", " ", " ", "8")));
+		board1.add(new ArrayList<>(Arrays.asList("4", "9", " ", "7", "6", " ", " ", "3", "2")));
+		board1.add(new ArrayList<>(Arrays.asList("8", "6", " ", "3", " ", "4", " ", " ", " ")));
+		boards.add(board1);
+
+		ArrayList<ArrayList<String>> board2 = new ArrayList<>();
+		board2.add(new ArrayList<>(Arrays.asList("1", " ", "2", " ", "4", " ", " ", " ", "5")));
+		board2.add(new ArrayList<>(Arrays.asList(" ", " ", " ", "5", " ", "1", "7", " ", " ")));
+		board2.add(new ArrayList<>(Arrays.asList("6", " ", " ", "7", "8", " ", " ", "2", "9")));
+		board2.add(new ArrayList<>(Arrays.asList("5", " ", " ", " ", "3", " ", "9", "8", "1")));
+		board2.add(new ArrayList<>(Arrays.asList(" ", "8", "3", "1", " ", "6", " ", "5", " ")));
+		board2.add(new ArrayList<>(Arrays.asList("7", " ", "1", "8", " ", "4", "2", " ", " ")));
+		board2.add(new ArrayList<>(Arrays.asList("3", "2", " ", "4", "1", "5", " ", "7", "8")));
+		board2.add(new ArrayList<>(Arrays.asList(" ", " ", "6", " ", " ", " ", "3", "1", "4")));
+		board2.add(new ArrayList<>(Arrays.asList("4", " ", "7", "3", " ", " ", " ", "9", " ")));
+		boards.add(board2);
+	}
+
+	private ArrayList<ArrayList<String>> cloneBoard(int index) {
 		ArrayList<ArrayList<String>> boardClone = new ArrayList<>();
-	    ArrayList<ArrayList<String>> originalBoard = this.originalBoard;
+	    ArrayList<ArrayList<String>> originalBoard = boards.get(index);
 
 	    for (ArrayList<String> originalRow : originalBoard) {
 	        ArrayList<String> clonedRow = new ArrayList<>(originalRow);
@@ -137,13 +165,19 @@ public class Sudoku {
 	}
 
 	private void initializeBoard() {
-		SudokuMaker sm = new SudokuMaker();
-		originalBoard = sm.makeSudoku();
-		board = cloneBoard();
+		Random random = new Random();
+
+		int temp = indexBoard;
+
+		while(temp == indexBoard) {
+			indexBoard = random.nextInt(boards.size());
+		}
+
+		board = cloneBoard(indexBoard);		
 	}
 	
 	// Used for test
 	public ArrayList<ArrayList<String>> getBoard() {
-		return this.cloneBoard();
+		return this.cloneBoard(0);
 	}
 }

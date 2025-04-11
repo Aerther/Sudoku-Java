@@ -25,7 +25,7 @@ public class SudokuMaker {
 		}
 		
 		this.emptyBoard = ss.getBoard();
-		this.removeNumbers(55);
+		this.removeNumbers(50);
 		
 		return this.emptyBoard;
 	}

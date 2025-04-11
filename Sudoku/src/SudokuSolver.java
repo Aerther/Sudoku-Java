@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 public class SudokuSolver {
 	private ArrayList<ArrayList<String>> board = new ArrayList<>();
+	private int solutions = 0;
+	private int count = 0;
 	
-	public SudokuSolver(ArrayList<ArrayList<String>> board) {
+	public void setBoard(ArrayList<ArrayList<String>> board) {
 		this.board = board;
 	}
 	
@@ -47,10 +49,41 @@ public class SudokuSolver {
 		return null;
 	}
 	
-	public boolean solver() {
+	public void resetSolutions() {
+		this.solutions = 0;
+	}
+	
+	public void countSolutions() {
 		int[] emptySpace = this.getNextEmptySpace();
 		
-		if(emptySpace == null) return true;
+		if(emptySpace == null) {
+			this.solutions++;
+			return;
+		}
+		
+		int row = emptySpace[0];
+		int col = emptySpace[1];
+		
+		for(int num = 1; num < 10; num++) {
+			if(this.isValidMove(String.valueOf(num), row, col)) {
+				board.get(row).set(col, String.valueOf(num));
+				this.countSolutions();
+				board.get(row).set(col, " ");
+			}
+		}
+	}
+	
+	public boolean solveBoard() {
+		count++;
+		if(count >= 500) {
+			return true;
+		}
+		
+		int[] emptySpace = this.getNextEmptySpace();
+		
+		if(emptySpace == null) {
+			return true;
+		}
 		
 		int row = emptySpace[0];
 		int col = emptySpace[1];
@@ -59,7 +92,7 @@ public class SudokuSolver {
 			if(this.isValidMove(String.valueOf(num), row, col)) {
 				board.get(row).set(col, String.valueOf(num));
 				
-				if(this.solver()) {
+				if(this.solveBoard()) {
 					return true;
 				}
 				
@@ -68,6 +101,10 @@ public class SudokuSolver {
 		}
 		
 		return false;
+	}
+	
+	public int getSolutions() {
+		return this.solutions;
 	}
 	
 	// Used for test

@@ -9,6 +9,7 @@ import java.util.Set;
 public class Sudoku {
 	private ArrayList<ArrayList<String>> originalBoard = new ArrayList<>();
 	private ArrayList<ArrayList<Integer>> lockedPositions = new ArrayList<>();
+	private ArrayList<ArrayList<String>> filledBoard = new ArrayList<>();
 	private ArrayList<ArrayList<String>> board = new ArrayList<>();
 
 	private String selectedNumber = "1";
@@ -19,7 +20,7 @@ public class Sudoku {
 	}
 
 	public void restartBoard() {
-		this.board = cloneBoard();
+		this.board = cloneBoard(this.originalBoard);
 	}
 
 	public void newGame() {
@@ -73,7 +74,11 @@ public class Sudoku {
 		return true;
 
 	}
-
+	
+	public void seeSolution() {
+		board = cloneBoard(filledBoard);
+	}
+	
 	private boolean isComplete() {
 		for (int row = 0; row < board.size(); row++) {
 			for (int col = 0; col < board.get(row).size(); col++) {
@@ -92,7 +97,7 @@ public class Sudoku {
 		}
 	}
 
-	private boolean isLocked(int row, int col) {
+	public boolean isLocked(int row, int col) {
 		for (int i = 0; i < lockedPositions.size(); i++) {
 			for (int j = 0; j < lockedPositions.get(i).size(); j++) {
 				if(row == lockedPositions.get(i).get(0) && col == lockedPositions.get(i).get(1)) {
@@ -123,9 +128,8 @@ public class Sudoku {
 		}
 	}
 
-	private ArrayList<ArrayList<String>> cloneBoard() {
+	private ArrayList<ArrayList<String>> cloneBoard(ArrayList<ArrayList<String>> originalBoard) {
 		ArrayList<ArrayList<String>> boardClone = new ArrayList<>();
-	    ArrayList<ArrayList<String>> originalBoard = this.originalBoard;
 
 	    for (ArrayList<String> originalRow : originalBoard) {
 	        ArrayList<String> clonedRow = new ArrayList<>(originalRow);
@@ -139,11 +143,12 @@ public class Sudoku {
 	private void initializeBoard() {
 		SudokuMaker sm = new SudokuMaker();
 		originalBoard = sm.makeSudoku();
-		board = cloneBoard();
+		board = cloneBoard(this.originalBoard);
+		filledBoard = sm.getFilledBoard();
 	}
 	
 	// Used for test
 	public ArrayList<ArrayList<String>> getBoard() {
-		return this.cloneBoard();
+		return this.cloneBoard(this.originalBoard);
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -42,7 +43,7 @@ public class SudokuGUI extends JFrame implements ActionListener {
 		restartButton.setForeground(Constants.BUTTON_FOREGROUND);
 		restartButton.addActionListener(this);
 		restartButton.setActionCommand("restart");
-		restartButton.setBounds(Constants.WINDOW_WIDTH/3-Constants.OTHERS_BUTTON_WIDTH/2, 40-Constants.OTHER_BUTTON_HEIGHT/2, Constants.OTHERS_BUTTON_WIDTH, Constants.OTHER_BUTTON_HEIGHT);
+		restartButton.setBounds(2*Constants.WINDOW_WIDTH/4-Constants.OTHERS_BUTTON_WIDTH/2, 40-Constants.OTHER_BUTTON_HEIGHT/2, Constants.OTHERS_BUTTON_WIDTH, Constants.OTHER_BUTTON_HEIGHT);
 		getContentPane().add(restartButton);
 
 		// New Game
@@ -52,8 +53,18 @@ public class SudokuGUI extends JFrame implements ActionListener {
 		newGameButton.setForeground(Constants.BUTTON_FOREGROUND);
 		newGameButton.addActionListener(this);
 		newGameButton.setActionCommand("new_game");
-		newGameButton.setBounds(2*Constants.WINDOW_WIDTH/3-Constants.OTHERS_BUTTON_WIDTH/2, 40-Constants.OTHER_BUTTON_HEIGHT/2, Constants.OTHERS_BUTTON_WIDTH, Constants.OTHER_BUTTON_HEIGHT);
+		newGameButton.setBounds(3*Constants.WINDOW_WIDTH/4-Constants.OTHERS_BUTTON_WIDTH/2, 40-Constants.OTHER_BUTTON_HEIGHT/2, Constants.OTHERS_BUTTON_WIDTH, Constants.OTHER_BUTTON_HEIGHT);
 		getContentPane().add(newGameButton);
+		
+		// See solution
+		JButton solutionButton = new JButton("Solution");
+		solutionButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		solutionButton.setBackground(Constants.BUTTON_BACKGROUND);
+		solutionButton.setForeground(Constants.BUTTON_FOREGROUND);
+		solutionButton.addActionListener(this);
+		solutionButton.setActionCommand("solution");
+		solutionButton.setBounds(1*Constants.WINDOW_WIDTH/4-Constants.OTHERS_BUTTON_WIDTH/2, 40-Constants.OTHER_BUTTON_HEIGHT/2, Constants.OTHERS_BUTTON_WIDTH, Constants.OTHER_BUTTON_HEIGHT);
+		getContentPane().add(solutionButton);
 
 		// Add the numbers buttons
 		String[] numButtonsString = {"1", "2", "3", "4", "5", "6", "7", "8", "9", " "};
@@ -66,7 +77,7 @@ public class SudokuGUI extends JFrame implements ActionListener {
 			button.setActionCommand(numButtonsString[i-1]);
 			button.setBounds((i)*Constants.WINDOW_WIDTH/11-Constants.BUTTON_WIDTH/2, Constants.WINDOW_HEIGHT-130, Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
 			getContentPane().add(button);
-
+			
 			numButtons.add(button);
 		}
 
@@ -114,8 +125,14 @@ public class SudokuGUI extends JFrame implements ActionListener {
 
 				int row = Integer.parseInt(button.getActionCommand().split(Constants.SEPARATOR)[0]);
 				int col = Integer.parseInt(button.getActionCommand().split(Constants.SEPARATOR)[1]);
-
+				
 				button.setText(sudoku.getBoardPosition(row, col));
+				
+				if(sudoku.isLocked(row, col)) {
+					button.setForeground(new Color(0, 0, 0));
+				} else {
+					button.setForeground(Color.decode("#e93cbb"));
+				}
 			}
 		}
 	}
@@ -142,14 +159,16 @@ public class SudokuGUI extends JFrame implements ActionListener {
 		} else if(e.getActionCommand().equals("new_game")) {
 			sudoku.newGame();
 			updateBoard();
-		}
-		else if(!e.getActionCommand().contains(Constants.SEPARATOR)) {
+		} else if(e.getActionCommand().equals("solution")) {
+			sudoku.seeSolution();
+			updateBoard();
+		} else if(!e.getActionCommand().contains(Constants.SEPARATOR)) {
 			updateNumButtons((JButton) e.getSource());
 			sudoku.setSelectedNumber(e.getActionCommand());
-		} else {
+		}  else {
 			int row = Integer.parseInt(e.getActionCommand().split(Constants.SEPARATOR)[0]);
 			int col = Integer.parseInt(e.getActionCommand().split(Constants.SEPARATOR)[1]);
-
+			
 			sudoku.makeMove(row, col);
 			updateBoard();
 

@@ -75,7 +75,7 @@ public class SudokuSolver {
 	
 	public boolean solveBoard() {
 		count++;
-		if(count >= 500) {
+		if(count >= 350) {
 			return true;
 		}
 		

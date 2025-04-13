@@ -4,9 +4,14 @@ import java.util.Random;
 
 public class SudokuMaker {
 	private ArrayList<ArrayList<String>> emptyBoard = new ArrayList<>();
+	private ArrayList<ArrayList<String>> filledBoard = new ArrayList<>();
 	
 	public SudokuMaker() {
 		this.fillEmptyBoard();
+	}
+	
+	public ArrayList<ArrayList<String>> getFilledBoard() {
+		return this.filledBoard;
 	}
 	
 	public ArrayList<ArrayList<String>> makeSudoku() {
@@ -16,6 +21,7 @@ public class SudokuMaker {
 		
 		ss.setBoard(this.cloneBoard(emptyBoard));
 		ss.solveBoard();
+		filledBoard = this.cloneBoard(ss.getBoard());
 		
 		for (int i = 0; i < ss.getBoard().size(); i++) {
 			if(ss.getBoard().get(i).contains(" ")) {
@@ -126,9 +132,8 @@ public class SudokuMaker {
 		}
 	}
 
-	private ArrayList<ArrayList<String>> cloneBoard(ArrayList<ArrayList<String>> board) {
+	private ArrayList<ArrayList<String>> cloneBoard(ArrayList<ArrayList<String>> originalBoard) {
 		ArrayList<ArrayList<String>> boardClone = new ArrayList<>();
-	    ArrayList<ArrayList<String>> originalBoard = board;
 
 	    for (ArrayList<String> originalRow : originalBoard) {
 	        ArrayList<String> clonedRow = new ArrayList<>(originalRow);
